@@ -2,6 +2,8 @@ import tcod as libtcod
 import tcod.event
 import tcod.console
 
+import input_handlers
+
 
 def main():
     screen_width = 80
@@ -18,20 +20,38 @@ def main():
     con = libtcod.console.Console(screen_width, screen_height)
     panel = libtcod.console.Console(screen_width, panel_height)
 
-    root.print(screen_width // 2 - 7, screen_height // 2 - 12, 'RogueSouls', fg=libtcod.crimson,
-               bg=libtcod.darkest_han)
-    root.print(screen_width // 2 - 8, screen_height // 2 - 10, 'By Jerezereh')
+    # root.print(screen_width // 2 - 7, screen_height // 2 - 12, 'RogueSouls', fg=libtcod.crimson,
+    #            bg=libtcod.darkest_han)
+    # root.print(screen_width // 2 - 8, screen_height // 2 - 10, 'By Jerezereh')
 
     while True:
+        libtcod.console_put_char(con, player_x, player_y, '@', libtcod.BKGND_NONE)
+        libtcod.console_blit(con, 0, 0, screen_width, screen_height, root, 0, 0)
         libtcod.console_flush()
-        # key = libtcod.console_check_for_keypress()
 
         for event in libtcod.event.get():
             if event.type == "QUIT":
-                print(event)
-                raise SystemExit()
+                return True
             if event.type == "KEYDOWN":
-                print(event)
+                action = input_handlers.handle_keys(event)
+            else:
+                action = None
+
+            if action is not None:
+                move = action.get('move')
+                exit = action.get('exit')
+                fullscreen = action.get('fullscreen')
+
+                if move:
+                    dx, dy = move
+                    player_x += dx
+                    player_y += dy
+
+                if exit:
+                    return True
+
+                if fullscreen:
+                    libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
 
 if __name__ == "__main__":
