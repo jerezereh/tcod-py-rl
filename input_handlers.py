@@ -18,7 +18,7 @@ def handle_keys(key):
         return {'move': (1, -1)}
     elif key.sym == libtcod.event.K_n:
         return {'move': (-1, 1)}
-    elif key.sym == libtcod.event.K_COMMA:
+    elif key.sym == libtcod.event.K_PERIOD:
         return {'move': (1, 1)}
 
     if key.sym == libtcod.event.K_RETURN and key.mod == libtcod.event.KMOD_ALT:
